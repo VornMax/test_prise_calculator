@@ -1,0 +1,20 @@
+<h1>Каталог товаров</h1>
+
+<% @products.each do |product| %>
+  <div class="product">
+    <h2><%= product.title %> (Артикул: <%= product.article %>)</h2>
+    <p><strong>Бренд:</strong> <%= product.brand %></p>
+    <p><strong>Описание:</strong> <%= product.description %></p>
+    <p><img src="<%= product.image %>" alt="<%= product.title %>"></p>
+    
+    <h3>Предложения:</h3>
+    <% product.offers.each do |offer| %>
+      <ul>
+        <li><strong>Цена:</strong> <%= offer.price %></li>
+        <li><strong>Срок доставки:</strong> <%= offer.delivery_date %> дней</li>
+        <li><strong>Бонусы:</strong> <%= offer.bonuses %></li>
+        <li><strong>Наличие на складе:</strong> <%= offer.stock %> шт.</li>
+      </ul>
+    <% end %>
+  </div>
+<% end %>

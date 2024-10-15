@@ -1,0 +1,38 @@
+version: '3'
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: myapp_development
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  app:
+    build: .
+    command: >
+      bash -c "
+      rm -f tmp/pids/server.pid &&
+      bundle exec rails server -b '0.0.0.0'"
+    volumes:
+      - ".:/myapp"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgres://postgres:password@db:5432/myapp_development
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY_BASE: 'a025312a66f293f511b263d3048b7307da64ce2dacaed488d99b9a0ab7eec540993c3c5e74a514763add4e951c4bb6968c82bb8146706cd2e15f74e633f19e40'
+
+volumes:
+  db_data:
